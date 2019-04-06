@@ -1,117 +1,183 @@
-import java.util.Vector;
 /**
+ *  Clase VectorHeap
  *
- * @author Diego Estrada 18540
  * @author Isabel Ortiz 18176
- * Extraído de: Java Structures (2007), Duane A. Bailey.
+ * @author Diego Estrada 18540
  */
-public class VectorHeap<E extends Comparable<E>> implements PriorityQueue<E>{
-    Vector<E> vec;
+import java.util.Vector;
 
-    public VectorHeap(){
-        vec = new Vector<E>();
-    }
+/**
+ * @param <E> vector
+ */
+public class VectorHeap<E extends Comparable<E>> implements PriorityQueue<E> {
 
-    protected static int parent(int i)
-    // pre: 0 <= i < size
-    // post: returns parent of node at location i
+    protected Vector<E> data;
+
+    /**
+     * El constructor de la clase
+     */
+    public VectorHeap() //
     {
-        return (i-1)/2;
-    }
-    protected static int left(int i)
-    // pre: 0 <= i < size
-    // post: returns index of left child of node at location i
-    {
-        return 2*i+1;
-    }
-    protected static int right(int i)
-    // pre: 0 <= i < size
-    // post: returns index of right child of node at location i
-    {
-        return 2*(i+1);
+        data = new Vector<E>();
     }
 
-    protected void percolateUp(int leaf)
-    // pre: 0 <= leaf < size
+    /**
+     * Se obtiene el primer elemento
+     * @return un genérico E
+     */
+    @Override
+    public E getFirst() {
+        return data.get(0);
+    }
+
+    /**
+     * Se un parametro generico
+     * @param v un genérico para agregar
+     */
+    public VectorHeap(Vector<E> v)
+    {
+        int i;
+        data = new Vector<E>(v.size()); // we know ultimate size
+        for (i = 0; i < v.size(); i++) { // add elements to heap
+            add(v.get(i));
+        }
+    }
+    /**
+     * Método para el nodo
+     * @param i un entero
+     * @return un entero
+     */
+    protected static int parent(int i){
+        return (i - 1) / 2;
+    }
+
+    /**
+     * un método para la localizacion a la derecha
+     *
+     * @param i un index entero
+     * @return un entero
+     */
+    protected static int right(int i) // post: returns index of right child of node at location i
+    {
+        return (2 * i + 1) + 1;
+    }
+
+    /**
+     * Metodo percolateUp
+     * @param leaf un entero para agregar
+     */
+    protected void percolateUp(int leaf) // pre: 0 <= leaf < size
     // post: moves node at index leaf up to appropriate position
     {
         int parent = parent(leaf);
-        E value = vec.get(leaf);
-        while (leaf > 0 && (value.compareTo(vec.get(parent)) < 0))
-        {
-            vec.set(leaf,vec.get(parent));
+        E value = data.get(leaf);
+        while (leaf > 0
+                && (value.compareTo(data.get(parent)) < 0)) {
+            data.set(leaf, data.get(parent));
             leaf = parent;
             parent = parent(leaf);
         }
-        vec.set(leaf,value);
+        data.set(leaf, value);
     }
 
-    public void add(E value)
-    // pre: value is non-null comparable
-    // post: value is added to priority queue
-    {
-        vec.add(value);
-        percolateUp(vec.size()-1);
-    }
-
-
-
-    public E getFirst(){
-        return vec.get(0);
-    }
-
-    public E remove()
-    // pre: !isEmpty()
+    /**
+     * Método para remover
+     *
+     * @return un genérico E
+     */
+    @Override
+    public E remove() // pre: !isEmpty()
     // post: returns and removes minimum value from queue
     {
         E minVal = getFirst();
-        vec.set(0,vec.get(vec.size()-1));
-        vec.setSize(vec.size()-1);
-        if (vec.size() > 1) pushDownRoot(0);
+        data.set(0, data.get(data.size() - 1));
+        data.setSize(data.size() - 1);
+        if (data.size() > 1) {
+            pushDownRoot(0);
+        }
         return minVal;
     }
 
-
-    protected void pushDownRoot(int root)
-    // pre: 0 <= root < size
+    /**
+     * método para bajar el valor y ordenarlo
+     * @param root el entero de la raiz o nodo
+     */
+    protected void pushDownRoot(int root) // pre: 0 <= root < size
     // post: moves node at index root down
     // to appropriate position in subtree
     {
-        int heapSize = vec.size();
-        E value = vec.get(root);
+        int heapSize = data.size();
+        E value = data.get(root);
         while (root < heapSize) {
             int childpos = left(root);
-            if (childpos < heapSize)
-            {
-                if ((right(root) < heapSize) && ((vec.get(childpos+1)).compareTo(vec.get(childpos)) < 0))
-                {
+            if (childpos < heapSize) {
+                if ((right(root) < heapSize)
+                        && ((data.get(childpos + 1)).compareTo(data.get(childpos)) < 0)) {
                     childpos++;
                 }
                 // Assert: childpos indexes smaller of two children
-                if ((vec.get(childpos)).compareTo(value) < 0)
-                {
-                    vec.set(root,vec.get(childpos));
+                if ((data.get(childpos)).compareTo(value) < 0) {
+                    data.set(root, data.get(childpos));
                     root = childpos; // keep moving down
                 } else { // found right location
-                    vec.set(root,value);
+                    data.set(root, value);
                     return;
                 }
             } else { // at a leaf! insert and halt
-                vec.set(root,value);
+                data.set(root, value);
                 return;
             }
         }
     }
-
-    public boolean isEmpty(){
-        if(vec.isEmpty())
-            return true;
-        else
-            return false;
+    /**
+     * Método para limpiar el vector
+     */
+    @Override
+    public void clear() {
+        data.clear();
     }
 
-    public int size(){
-        return vec.size();
+    /**
+     * Método para agregar
+     *
+     * @param value un genérico E
+     */
+    @Override
+    public void add(E value) // pre: value is non-null comparable
+    // post: value is added to priority queue
+    {
+        data.add(value);
+        percolateUp(data.size() - 1);
     }
+    /**
+     * método para el valor de la izquierda
+     * @param i un entero
+     * @return un entero de izquierda
+     */
+    protected static int left(int i) // pre: 0 <= i < size
+    // post: returns index of left child of node at location i
+    {
+        return 2 * i + 1;
+    }
+    /**
+     * Un método para verificar si esta vacío
+     *
+     * @return un booleano, 0=vacio 1= lleno
+     */
+    @Override
+    public boolean isEmpty() {
+        return data.size() == 0;
+    }
+
+    /**
+     * Método para el tamaño
+     * @return un entero con el tamaño
+     */
+    @Override
+    public int size() {
+        return data.size();
+    }
+
 
 }
+
