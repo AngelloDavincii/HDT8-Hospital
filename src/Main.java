@@ -54,7 +54,7 @@ public class Main {
                 } catch (FileNotFoundException e) {
                     System.out.println("El archivo incorrecto!");
                 }
-                //Opciones aqui
+                //Opciones
                 System.out.println("Ingrese el numero que quiere usar \n1.HeapVector\n2.Java Collection Framework con Priority Queue\n3.Salir\n");
                 op2 = key3.nextInt();
                 while (op2 != 3) {
@@ -109,7 +109,7 @@ public class Main {
                 } catch (FileNotFoundException e) {
                     System.out.println("Archivo Incorrecto!!");
                 }
-                //Opciones aqui
+                //Opciones 
                 System.out.println("Ingrese el numero de la opcion que desea realizar\n1.Revisar cual es el siguiente paciente \n2.Pedir al siguiente paciente \n3.Salir\n");
                 op2 = key3.nextInt();
                 while (op2 != 3) {
